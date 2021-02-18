@@ -1,3 +1,8 @@
+body{
+  background-color:cornflowerblue;
+  
+}
+
 #sliders {
   height: 400px;
   width: 60%;
@@ -54,7 +59,9 @@ img {
 .main {
   display: none;
 }
-
+/* #loading-spinner{
+display: none;
+} */
 @media (max-width: 767px) {
   .justify-content-around.align-items-center.mt-3.gallery-header.mb-2 {
     flex-direction: column;

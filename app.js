@@ -25,6 +25,30 @@ input.addEventListener("keypress", function(event) {
    document.getElementById("search-btn").click();
   }
 });
+
+
+const getImages = (query) => {
+   toggleSpinner(true);
+  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
+ 
+    .then(response => response.json())
+    .then(data => showImages(data.hits))
+    .catch(err => console.log(err))
+    
+}
+
+let slideIndex = 0;
+const selectItem = (event, img) => {
+  let element = event.target;
+  element.classList.toggle('added');
+ 
+  let item = sliders.indexOf(img);
+  if (item === -1) {
+    sliders.push(img);
+  }
+ 
+}
+
 // show images 
 const showImages = (images) => {
   
@@ -36,32 +60,16 @@ const showImages = (images) => {
     
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
-    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
+    div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">
+    <a class='btn text-white' href="${image.pageURL}">Download Link</a>
+    `;
     gallery.appendChild(div)
+    toggleSpinner(false);
+     
   })
-
-}
-
-const getImages = (query) => {
-  fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
-    .then(response => response.json())
-    .then(data => showImages(data.hits))
-    .catch(err => console.log(err))
-}
-
-let slideIndex = 0;
-const selectItem = (event, img) => {
-  let element = event.target;
-  element.classList.add('added');
  
-  let item = sliders.indexOf(img);
-  if (item === -1) {
-    sliders.push(img);
-  } else {
-   // alert('Hey, Already added !')
-    element.classList.remove('added');
-  }
 }
+
 var timer
 const createSlider = () => {
   // check slider image length
@@ -86,11 +94,14 @@ const createSlider = () => {
 
   if(duration<1000){
     
-    alert('You can set duration minimum 1000 ms');
+    document.getElementById('duration').value = "minimum 1000 ms"
+    //sliderBtn.style.backgroundColor = '#dc3545';
+    
     imagesArea.style.display = 'block';
-    //document.getElementById('duration').style.backgroundColor = "red"
+    
     
   }else{
+    sliderBtn.style.backgroundColor = 'green';
   sliders.forEach(slide => {
     let item = document.createElement('div')
     item.className = "slider-item";
@@ -98,6 +109,7 @@ const createSlider = () => {
     src="${slide}"
     alt="">`;
     sliderContainer.appendChild(item)
+    
   })
   changeSlide(0)
   timer = setInterval(function () {
@@ -143,3 +155,16 @@ searchBtn.addEventListener('click', function () {
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
+
+const toggleSpinner = (show)=>{
+  const spinner = document.getElementById("loading-spinner");
+
+ if(show){
+   spinner.classList.remove('d-none');
+ }else{
+   spinner.classList.add('d-none');
+ }
+   
+  }
+  
+
